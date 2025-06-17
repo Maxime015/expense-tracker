@@ -1,0 +1,186 @@
+openapi: 3.0.0
+info:
+  title: Expense Tracker API - Subscriptions
+  description: API pour la gestion des abonnements
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001/api
+    description: Serveur local de développement
+
+paths:
+  /subscriptions/{userId}:
+    get:
+      tags:
+        - Subscriptions
+      summary: Récupère les abonnements d'un utilisateur
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+      responses:
+        '200':
+          description: Liste des abonnements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subscription'
+        '400':
+          description: ID utilisateur invalide
+        '500':
+          description: Erreur serveur
+
+  /subscriptions:
+    post:
+      tags:
+        - Subscriptions
+      summary: Crée un nouvel abonnement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionInput'
+      responses:
+        '201':
+          description: Abonnement créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Données invalides
+        '500':
+          description: Erreur serveur
+
+  /subscriptions/{id}:
+    delete:
+      tags:
+        - Subscriptions
+      summary: Supprime un abonnement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'abonnement à supprimer
+      responses:
+        '200':
+          description: Abonnement supprimé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Subscription deleted successfully"
+        '400':
+          description: ID invalide
+        '404':
+          description: Abonnement non trouvé
+        '500':
+          description: Erreur serveur
+
+  /subscriptions/summary/{userId}:
+    get:
+      tags:
+        - Financial Summary
+      summary: Récupère le résumé financier d'un utilisateur
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+      responses:
+        '200':
+          description: Résumé financier
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Total:
+                    type: number
+                    format: float
+                    example: 150.50
+        '400':
+          description: ID utilisateur invalide
+        '500':
+          description: Erreur serveur
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 123
+        label:
+          type: string
+          example: "Netflix"
+        amount:
+          type: number
+          format: float
+          example: 9.99
+        date:
+          type: string
+          format: date
+          example: "2023-01-15"
+        recurrence:
+          type: string
+          enum: [monthly, yearly, weekly]
+          example: "monthly"
+        image_url:
+          type: string
+          example: "https://example.com/netflix.png"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T12:00:00Z"
+
+    SubscriptionInput:
+      type: object
+      required:
+        - user_id
+        - label
+        - amount
+        - date
+        - recurrence
+      properties:
+        user_id:
+          type: integer
+          example: 123
+        label:
+          type: string
+          example: "Spotify Premium"
+        amount:
+          type: number
+          format: float
+          example: 12.99
+        date:
+          type: string
+          format: date
+          example: "2023-01-01"
+        recurrence:
+          type: string
+          enum: [monthly, yearly, weekly]
+          example: "monthly"
+        image_url:
+          type: string
+          example: "https://example.com/spotify.png"
