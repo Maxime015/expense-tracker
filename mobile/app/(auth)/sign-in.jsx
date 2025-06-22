@@ -15,26 +15,22 @@ export default function Page() {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 État pour afficher/masquer le mot de passe
 
-  // Handle the submission of the sign-in form
+  // Handle the submission of the sign‑in form
   const onSignInPress = async () => {
     if (!isLoaded) return;
 
-    // Start the sign-in process using the email and password provided
     try {
       const signInAttempt = await signIn.create({
         identifier: emailAddress,
         password,
       });
 
-      // If sign-in process is complete, set the created session as active
-      // and redirect the user
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/");
       } else {
-        // If the status isn't complete, check why. User might need to
-        // complete further steps.
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
     } catch (err) {
@@ -50,8 +46,8 @@ export default function Page() {
     <KeyboardAwareScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{ flexGrow: 1 }}
-      enableOnAndroid={true}
-      enableAutomaticScroll={true}
+      enableOnAndroid
+      enableAutomaticScroll
     >
       <View style={styles.container}>
         <Image
@@ -76,17 +72,35 @@ export default function Page() {
           value={emailAddress}
           placeholder="Enter email"
           placeholderTextColor="#9A8478"
-          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          onChangeText={setEmailAddress}
         />
 
-        <TextInput
-          style={[styles.input, error && styles.errorInput]}
-          value={password}
-          placeholder="Enter password"
-          placeholderTextColor="#9A8478"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
+        {/* Champ mot de passe avec bascule affichage/masquage */}
+        <View
+          style={[
+            styles.input,
+            error && styles.errorInput,
+            { flexDirection: "row", alignItems: "center" },
+          ]}
+        >
+          <TextInput
+            style={{ flex: 1, color: COLORS.text }}
+            value={password}
+            placeholder="Enter password"
+            placeholderTextColor="#9A8478"
+            secureTextEntry={!showPassword}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Ionicons
+              name={showPassword ? "eye-off" : "eye"}
+              size={22}
+              color={COLORS.textLight}
+              style={{ marginHorizontal: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity style={styles.button} onPress={onSignInPress}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
@@ -102,3 +116,4 @@ export default function Page() {
     </KeyboardAwareScrollView>
   );
 }
+

@@ -1,5 +1,5 @@
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
+import { useUser } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
 import {
   Alert,
   FlatList,
@@ -18,28 +18,36 @@ import { SignOutButton } from "../../components/SignOutButton.jsx";
 import BalanceCard from "../../components/BalanceCard.jsx";
 import TransactionItem from "../../components/TransactionItem.jsx";
 import NoTransactionsFound from "../../components/NoTransactionsFound.jsx";
+import { COLORS } from "../../constants/colors";
 
 export default function Page() {
   const { user } = useUser();
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
 
+  // Génère un avatar aléatoire basé sur l'email
+  const emailPrefix = user?.emailAddresses[0]?.emailAddress.split("@")[0] || "user";
+  const avatarUrl = `https://api.dicebear.com/7.x/avataaars/png?seed=${emailPrefix}&radius=50&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+
   const { transactions, summary, isLoading, loadData, deleteTransaction } =
-    useTransactions(user.id);
+    useTransactions(user?.id);
 
   const onRefresh = async () => {
     setRefreshing(true);
     await loadData();
     setRefreshing(false);
   };
+
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (user?.id) {
+      loadData();
+    }
+  }, [user?.id, loadData]);
 
   const handleDelete = (id) => {
     Alert.alert(
       "Delete Transaction",
-      "Are your sure you want to delete this transaction?",
+      "Are you sure you want to delete this transaction?",
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -68,14 +76,16 @@ export default function Page() {
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <Image
-              source={require("../../assets/images/logo.png")}
+              source={{ uri: avatarUrl }}
               style={styles.headerLogo}
-              contentFit="contain"
+              contentFit="cover"
+              transition={1000}
             />
+            
             <View style={styles.welcomeContainer}>
               <Text style={styles.welcomeText}>Welcome,</Text>
               <Text style={styles.usernameText}>
-                {user?.emailAddresses[0]?.emailAddress.split("@")[0]}
+                {emailPrefix}
               </Text>
             </View>
 
@@ -90,22 +100,31 @@ export default function Page() {
             </View>
             <SignOutButton />
           </View>
-          
         </View>
 
-      
-         <TouchableOpacity
-                style={styles.addButton}
-                onPress={() => router.push("/subscription")}
-              >
-                <Ionicons name="add" size={20} color="#FFF" />
-                <Text style={styles.addButtonText}>Subscriptions</Text>
-          </TouchableOpacity>
-    
 
         <BalanceCard summary={summary} />
 
-        <View style={styles.transactionsHeaderContainer}>
+          {/* Actions Row */}
+          <View style={styles.actionsRow}>
+                  <TouchableOpacity
+                    style={styles.insertButton}
+                    onPress={() => router.push("/analytics")}
+                  >
+                    <Ionicons name="analytics-outline" size={20} color="#FFF" />
+                    <Text style={styles.addButtonText}>Analytics</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                  style={styles.insertButton}
+                  onPress={() => router.push("/subscription")}
+                >
+                  <Ionicons name="calendar-outline" size={20} color="#FFF" />
+                  <Text style={styles.addButtonText}>Subscriptions</Text>
+                </TouchableOpacity>
+          </View>
+
+        <View style={styles.transactionsHeaderContaineur}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
         </View>
       </View>
@@ -119,9 +138,14 @@ export default function Page() {
         )}
         ListEmptyComponent={<NoTransactionsFound />}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]}
+            tintColor={COLORS.primary}
+          />
         }
       />
     </View>
   );
-}
+} 

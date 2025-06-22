@@ -46,11 +46,62 @@ const CATEGORIES = [
     icon: "cash",
   },
   {
+    id: "health",
+    name: "Health",
+    icon: "medkit",
+  },
+  {
+    id: "education",
+    name: "Education",
+    icon: "school",
+  },
+  {
+    id: "travel",
+    name: "Travel",
+    icon: "airplane",
+  },
+  {
+    id: "gifts",
+    name: "Gifts & Donations",
+    icon: "gift",
+  },
+  {
+    id: "subscriptions",
+    name: "Subscriptions",
+    icon: "albums",
+  },
+  {
+    id: "home",
+    name: "Home & Rent",
+    icon: "home",
+  },
+  {
+    id: "saving",
+    name: "Savings",
+    icon: "wallet",
+  },
+  {
+    id: "investment",
+    name: "Investments",
+    icon: "trending-up",
+  },
+  {
+    id: "tax",
+    name: "Taxes",
+    icon: "document-text",
+  },
+  {
+    id: "pets",
+    name: "Pets",
+    icon: "paw",
+  },
+  {
     id: "other",
     name: "Other",
     icon: "ellipsis-horizontal",
   },
 ];
+
 
 const CreateScreen = () => {
   const router = useRouter();

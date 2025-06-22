@@ -15,19 +15,37 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: -10,
     paddingHorizontal: 0,
     paddingVertical: 12,
   },
+
+  headero: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: -5,
+    paddingHorizontal: 0,
+    paddingVertical: 12,
+    bottom: 25,
+  },
+
   headerLeft: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    top: -10,
   },
-  headerLogo: {
-    width: 75,
-    height: 75,
+  TotalCard:{
+    top: 0,
+    marginBottom: 10,
   },
+ headerLogo: {
+  width: 50,
+  height: 50,
+  borderRadius: 25,
+  marginRight: 12,
+},
   welcomeContainer: {
     flex: 1,
   },
@@ -251,7 +269,17 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: -10,
+    paddingBottom: 5,
+  },
+
+    transactionsHeaderContaineur: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 5,
+    marginBottom: 0,
     paddingBottom: 5,
   },
   transactionsList: {
@@ -261,11 +289,6 @@ export const styles = StyleSheet.create({
   transactionsListContent: {
     paddingBottom: 20,
   },
-
-
-
-
-
 
 totalCard: {
   backgroundColor: COLORS.card,
@@ -277,6 +300,19 @@ totalCard: {
   shadowOpacity: 0.1,
   shadowRadius: 3,
   elevation: 3,
+},
+
+totalBox: {
+  backgroundColor: COLORS.card,
+  borderRadius: 20,
+  padding: 20,
+  marginBottom: 5,
+  shadowColor: COLORS.shadow,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 3,
+  elevation: 3,
+  bottom: 25,
 },
 
 totalStats: {
@@ -309,5 +345,117 @@ totalStatAmount: {
   fontWeight: "bold",
 },
 
-});
+insertButton: {
+  backgroundColor: COLORS.text,
+  paddingHorizontal: 16,
+  paddingVertical: 10,
+  borderRadius: 24,
+  flexDirection: "row",
+  alignItems: "center",
+  alignSelf: "flex-start", // ⬅️ empêche de prendre toute la largeur
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+  elevation: 3,
+  margin: 'auto',
+  bottom: 10,
+},
 
+// Nouveaux styles ajoutés
+  actionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+    backButton: {
+    padding: 10,
+    marginRight: 10,
+  },
+  activeTab: {
+    backgroundColor: COLORS.primary,
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  activeTabText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    color: COLORS.primary,
+    textAlign: 'center',
+    bottom: 30,
+  },
+  noDataText: {
+    textAlign: 'center',
+    marginVertical: 40,
+    fontSize: 16,
+    color: '#666',
+  },
+  tabContainer: {
+  flexDirection: 'row',
+  marginVertical: 20,
+  borderRadius: 12,
+  backgroundColor: '#F9F9F9',
+  overflow: 'hidden',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.08,
+  shadowRadius: 4,
+  elevation: 2,
+},
+tabContainero: {
+  flexDirection: 'row',
+  marginVertical: 20,
+  borderRadius: 12,
+  backgroundColor: '#F9F9F9',
+  overflow: 'hidden',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.08,
+  shadowRadius: 4,
+  elevation: 2,
+  bottom: 30,
+},
+tabButton: {
+  flex: 1,
+  paddingVertical: 14,
+  alignItems: 'center',
+  transition: 'all 0.3s ease-in-out',
+},
+chart: {
+  marginVertical: 20,
+  borderRadius: 20,
+  alignSelf: 'center',
+  backgroundColor: '#fff',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.08,
+  shadowRadius: 6,
+  elevation: 4,
+  paddingVertical: 10,
+  bottom: 35,
+},
+
+Bar: {
+  padding: 'auto',
+  marginVertical: 20,
+  borderRadius: 20,
+  alignSelf: 'center',
+  backgroundColor: '#fff',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.08,
+  shadowRadius: 6,
+  elevation: 4,
+  paddingVertical: 10,
+  bottom: 40,
+},
+
+
+});

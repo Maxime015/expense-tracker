@@ -12,8 +12,19 @@ const CATEGORY_ICONS = {
   Entertainment: "film",
   Bills: "receipt",
   Income: "cash",
+  Health: "medkit",
+  Education: "school",
+  Travel: "airplane",
+  "Gifts & Donations": "gift",
+  Subscriptions: "albums",
+  "Home & Rent": "home",
+  Savings: "wallet",
+  Investments: "trending-up",
+  Taxes: "document-text",
+  Pets: "paw",
   Other: "ellipsis-horizontal",
 };
+
 
 const TransactionItem = ({ item, onDelete }) => {
   const isIncome = parseFloat(item.amount) > 0;

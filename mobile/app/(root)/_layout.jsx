@@ -6,6 +6,6 @@ export default function Layout() {
   const { isSignedIn, isLoaded } = useUser();
 
   if (!isLoaded) return null;
-  if (!isSignedIn) return <Redirect href={"/sign-in"} />;
+  if (!isSignedIn) return <Redirect href={"/landing"} />;
   return <Stack screenOptions={{ headerShown: false }} />;
 }

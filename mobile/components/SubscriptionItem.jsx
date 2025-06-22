@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
-import { styles } from "../assets/styles/home.styles";
+import { styles } from "../assets/styles/Item.styles";
 import { formatDate } from "../lib/utils";
 
 const recurrenceLabels = {
@@ -13,44 +13,50 @@ const recurrenceLabels = {
 
 const SubscriptionItem = ({ item, onDelete }) => {
   return (
-    <View style={styles.transactionCard} key={item.id}>
-      <TouchableOpacity style={styles.transactionContent}>
-        {/* Image si elle existe, sinon une icône de substitution */}
-        <View style={styles.categoryIconContainer}>
+    <View style={styles.subscriptionCard} key={item.id}>
+      <TouchableOpacity style={styles.subscriptionContent}>
+        {/* Icône ou image */}
+        <View style={styles.subscriptionIconContainer}>
           {item.image_url ? (
             <Image
               source={{ uri: item.image_url }}
-              style={{ width: 28, height: 28, borderRadius: 5 }}
-              resizeMode="contain"
+              style={styles.subscriptionImage}
+              resizeMode="cover"
             />
           ) : (
-            <Ionicons name="pricetag-outline" size={24} color={COLORS.primary} />
+            <Ionicons 
+              name="pricetag-outline" 
+              size={28}  // Taille d'icône augmentée
+              color={COLORS.primary} 
+            />
           )}
         </View>
 
-        {/* Infos principales */}
-        <View style={styles.transactionLeft}>
-          <Text style={styles.transactionTitle}>{item.label}</Text>
-          <Text style={styles.transactionCategory}>
+        {/* Reste du code inchangé */}
+        <View style={styles.subscriptionLeft}>
+          <Text style={styles.subscriptionTitle}>{item.label}</Text>
+          <Text style={styles.subscriptionRecurrence}>
             {recurrenceLabels[item.recurrence] || "Inconnu"}
           </Text>
         </View>
 
-        {/* Montant et date */}
-        <View style={styles.transactionRight}>
-          <Text style={[styles.transactionAmount, { color: COLORS.expense }]}>
+        <View style={styles.subscriptionRight}>
+          <Text style={styles.subscriptionAmount}>
             -${parseFloat(item.amount).toFixed(2)}
           </Text>
-          <Text style={styles.transactionDate}>{formatDate(item.date)}</Text>
+          <Text style={styles.subscriptionDate}>{formatDate(item.date)}</Text>
         </View>
       </TouchableOpacity>
 
-      {/* Bouton suppression */}
       <TouchableOpacity
-        style={styles.deleteButton}
+        style={styles.subscriptionDeleteButton}
         onPress={() => onDelete(item.id)}
       >
-        <Ionicons name="trash-outline" size={20} color={COLORS.expense} />
+        <Ionicons 
+          name="trash-outline" 
+          size={25} 
+          color={COLORS.expense} 
+        />
       </TouchableOpacity>
     </View>
   );

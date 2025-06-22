@@ -1,5 +1,5 @@
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
+import { useUser } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
 import {
   Alert,
   FlatList,
@@ -14,17 +14,21 @@ import { useSubscriptions } from "../../hooks/useSubscriptions.js";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import PageLoader from "../../components/PageLoader.jsx";
-import { SignOutButton } from "../../components/SignOutButton.jsx";
 import TotalCard from "../../components/TotalCard.jsx";
 import SubscriptionItem from "../../components/SubscriptionItem.jsx";
 import NoSubscriptionsFound from "../../components/NoSubscriptionsFound.jsx";
+import { COLORS } from "../../constants/colors";
 
 export default function Sub() {
   const { user } = useUser();
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { subscriptions, summary, isLoading, loadData, deleteSubscription } =
+  // Génère un avatar aléatoire basé sur l'email
+  const emailPrefix = user?.emailAddresses[0]?.emailAddress.split("@")[0] || "user";
+  const avatarUrl = `https://api.dicebear.com/7.x/avataaars/png?seed=${emailPrefix}&radius=50&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+
+  const { subscriptions, subscriptionSummary, isLoading, loadData, deleteSubscription } =
     useSubscriptions(user.id);
 
   const onRefresh = async () => {
@@ -32,6 +36,7 @@ export default function Sub() {
     await loadData();
     setRefreshing(false);
   };
+
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -39,7 +44,7 @@ export default function Sub() {
   const handleDelete = (id) => {
     Alert.alert(
       "Delete Subscription",
-      "Are your sure you want to delete this subscription?",
+      "Are you sure you want to delete this subscription?",
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -67,34 +72,53 @@ export default function Sub() {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Image
-              source={require("../../assets/images/logo.png")}
+             <Image
+              source={{ uri: avatarUrl }}
               style={styles.headerLogo}
-              contentFit="contain"
+              contentFit="cover"
+              transition={1000}
             />
             <View style={styles.welcomeContainer}>
               <Text style={styles.welcomeText}>Welcome,</Text>
-              <Text style={styles.usernameText}>
-                {user?.emailAddresses[0]?.emailAddress.split("@")[0]}
+               <Text style={styles.usernameText}>
+                {emailPrefix}
               </Text>
             </View>
 
             <View style={styles.headerRight}>
               <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => router.push("/create")}
+                onPress={() => router.push("/")}
               >
-                <Ionicons name="add" size={20} color="#FFF" />
-                <Text style={styles.addButtonText}>Add</Text>
+                <Ionicons name="swap-horizontal" size={20} color="#FFF" />
+                <Text style={styles.addButtonText}>Transactions</Text>
               </TouchableOpacity>
             </View>
-            <SignOutButton />
           </View>
-          
         </View>
 
-    
-        <TotalCard summary={summary} />
+        <View style={styles.TotalCard}>
+          <TotalCard subscriptionSummary={subscriptionSummary} />
+        </View>
+
+        {/* Actions Row */}
+        <View style={styles.actionsRow}>
+              <TouchableOpacity
+                style={styles.insertButton}
+                onPress={() => router.push("/insert")}
+              >
+                <Ionicons name="add-circle" size={20} color="#FFF" />
+                <Text style={styles.addButtonText}>Subscription</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.insertButton}
+                onPress={() => router.push("/calendar")}
+              >
+                <Ionicons name="calendar-outline" size={20} color="#FFF" />
+                <Text style={styles.addButtonText}>Calendar</Text>
+              </TouchableOpacity>
+        </View>
 
         <View style={styles.transactionsHeaderContainer}>
           <Text style={styles.sectionTitle}>Recent Subscriptions</Text>
@@ -110,9 +134,14 @@ export default function Sub() {
         )}
         ListEmptyComponent={<NoSubscriptionsFound />}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]} // Correction ici
+            tintColor={COLORS.primary} // Correction ici
+          />
         }
       />
     </View>
   );
-}
+} 
