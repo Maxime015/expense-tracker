@@ -238,9 +238,9 @@ app.json
 
   <img src="./screenshots/d.jpg" style="width: 32%; margin-bottom: 10px;" />
   <img src="./screenshots/e.jpg" style="width: 32%; margin-bottom: 10px;" />
-  <img src="./screenshots/ef.jpg" style="width: 32%; margin-bottom: 10px;" />
-
   <img src="./screenshots/f.jpg" style="width: 32%; margin-bottom: 10px;" />
+
+  <img src="./screenshots/ef.jpg" style="width: 32%; margin-bottom: 10px;" />
   <img src="./screenshots/g.jpg" style="width: 32%; margin-bottom: 10px;" />
   <img src="./screenshots/h.jpg" style="width: 32%; margin-bottom: 10px;" />
 
