@@ -1,6 +1,7 @@
+![Demo App](./screenshots/p.png)
 # 📱 Expense Tracker - Application de Gestion Financière
 
-**Expense Tracker** est une application mobile complète qui vous permet de prendre le contrôle total de vos finances. Suivez vos dépenses, gérez vos abonnements, analysez vos habitudes financières et planifiez votre budget - le tout dans une interface intuitive et élégante.
+**Expense Tracker** est une application mobile complète qui vous permet de prendre le contrôle total de vos finances. Suivez vos dépenses, gérez vos abonnements, analysez vos habitudes financières, gérer vos listes de courses et planifiez votre budget - le tout dans une interface intuitive et élégante.
 
 ---
 
@@ -26,9 +27,10 @@
 
 ### 🔐 Sécurité Avancée
 - Authentification robuste avec **Clerk**
-- Vérification par **email (OTP sécurisé)**
+- Vérification par **email (OTP sécurisé)** à 6 chiffres
 - **Protection des sessions** et rate limiting avec Redis
 - Respect de la confidentialité des données
+- **Limitation de débit** avec **Redis**
 
 ### 🎨 UX/UI Premium
 - Choix entre **8 thèmes personnalisables**
@@ -58,6 +60,7 @@
 | **Analytics** | Graphiques, Totaux, Filtres |
 | **Ajout de transaction** | Montant, Type, Catégorie, Date |
 | **Ajout d'abonnement** | Nom, Fréquence, Montant, Image |
+| **Ajout de course** et **Liste de course** | text, is_completed |
 
 ---
 
@@ -80,7 +83,7 @@
 
   subgraph Base_de_données
     C[🗄️ PostgreSQL]
-    F[(Stockage : Transactions, Abonnements, URLs images)]
+    F[(Stockage : Transactions, Abonnements, Courses URLs images)]
   end
 
   A --> B
@@ -96,7 +99,7 @@
 ### 🖥️ Frontend (React Native)
 - Framework : **React Native + Expo**
 - Navigation : **Expo Router**
-- State Management : **Hooks personnalisés** (`useTransactions`, `useSubscriptions`)
+- State Management : **Hooks personnalisés** (`useTransactions`, `useSubscriptions`, `useGroceries)
 - Graphiques : **React Native Chart Kit**
 - Authentification : **Clerk**
 - Gestion des médias : **Expo Image Picker**
@@ -202,22 +205,22 @@ npx expo start
 
 2. **Front-End**
 ```plaintext
-└── app/
+└── 📁app/
     ├── _layout.jsx
-    ├── (auth)/
+    ├── 📁(auth)/
     │   ├── _layout.jsx
     │   ├── landing.jsx
     │   ├── sign-in.jsx
     │   └── sign-up.jsx
-    ├── (root)/
-    │   ├── _layout.jsx
-    │   ├── analytics.jsx
-    │   ├── calendar.jsx
-    │   ├── create.jsx
-    │   ├── index.jsx
-    │   ├── insert.jsx
-    │   └── subscription.jsx
-    └── ...
+    └── 📁(root)
+    ├── _layout.jsx
+    ├── analytics.jsx
+    ├── calendar.jsx
+    ├── create.jsx
+    ├── groceries.jsx
+    ├── index.jsx
+    ├── insert.jsx
+    └── subscription.jsx
 assets/
 components/
 constants/
