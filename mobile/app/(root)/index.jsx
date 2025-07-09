@@ -122,6 +122,7 @@ export default function Page() {
                   <Ionicons name="calendar-outline" size={20} color="#FFF" />
                   <Text style={styles.addButtonText}>Subscriptions</Text>
                 </TouchableOpacity>
+
           </View>
 
         <View style={styles.transactionsHeaderContaineur}>

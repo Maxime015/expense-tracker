@@ -13,5 +13,5 @@
     "**/*.tsx",
     "app/_layout.jsx",
     "app/index.jsx"
-  ]
+, "assets/styles/groceries.styles.ts", "constants/useTheme.js"  ]
 }

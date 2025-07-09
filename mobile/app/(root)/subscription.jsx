@@ -21,7 +21,7 @@ import { COLORS } from "../../constants/colors";
 
 export default function Sub() {
   const { user } = useUser();
-  const router = useRouter();
+  const router = useRouter(); 
   const [refreshing, setRefreshing] = useState(false);
 
   // Génère un avatar aléatoire basé sur l'email

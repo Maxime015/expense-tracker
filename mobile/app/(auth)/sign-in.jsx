@@ -3,7 +3,7 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-import { styles } from "@/assets/styles/auth.styles.js";
+import { styles } from "../../assets/styles/auth.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors.js";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
