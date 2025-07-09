@@ -174,30 +174,31 @@ const deleteGrocerie = async (id) => {
 
   // Supprime tous les groceries
   const clearAllGroceries = async () => {
-    if (!userId) {
-      Alert.alert("Error", "User not authenticated");
-      return false;
+  console.log("Attempting to clear groceries for user:", userId); // Debug log
+  if (!userId) {
+    console.error("No user ID provided - current userId:", userId);
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/groceries`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to clear groceries");
     }
 
-    try {
-      const response = await fetch(`${API_URL}/groceries`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-
-      if (!response.ok) throw new Error("Failed to clear groceries");
-
-      await loadData();
-      Alert.alert("Success", "All groceries cleared");
-      return true;
-    } catch (err) {
-      console.error("Error clearing groceries:", err);
-      setError(err);
-      Alert.alert("Error", err.message);
-      return false;
-    }
-  };
+    await loadData();
+    return true;
+  } catch (err) {
+    console.error("Error clearing groceries:", err);
+    throw err;
+  }
+};
 
   return {
     groceries,

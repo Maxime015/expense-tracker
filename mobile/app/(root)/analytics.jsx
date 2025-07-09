@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.content}>
         <View style={styles.headero}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.headerAction}>
             <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Analytics</Text>

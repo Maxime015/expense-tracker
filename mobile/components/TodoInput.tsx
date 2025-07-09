@@ -27,8 +27,8 @@ const TodoInput = ({ onAddTodo }: TodoInputProps) => {
           setNewTodo("");
         }
       } catch (error) {
-        console.log("Error adding a todo", error);
-        Alert.alert("Error", "Failed to add todo");
+        console.log("Error adding a grocery", error);
+        Alert.alert("Error", "Failed to add grocery");
       }
     }
   };
@@ -36,7 +36,8 @@ const TodoInput = ({ onAddTodo }: TodoInputProps) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 160 : 0}
+      enabled={isFocused} // Ajout de cette ligne
     >
       <View style={styles.inputSection}>
         <View style={styles.inputWrapper}>

@@ -13,11 +13,12 @@ import { styles } from "../../assets/styles/home.styles.js";
 import { useSubscriptions } from "../../hooks/useSubscriptions.js";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import PageLoader from "../../components/PageLoader.jsx";
+import SubLoad from "../../components/SubLoad.jsx";
 import TotalCard from "../../components/TotalCard.jsx";
 import SubscriptionItem from "../../components/SubscriptionItem.jsx";
 import NoSubscriptionsFound from "../../components/NoSubscriptionsFound.jsx";
 import { COLORS } from "../../constants/colors";
+import { SignOutButton } from "../../components/SignOutButton.jsx";
 
 export default function Sub() {
   const { user } = useUser();
@@ -65,7 +66,7 @@ export default function Sub() {
     );
   };
 
-  if (isLoading && !refreshing) return <PageLoader />;
+  if (isLoading && !refreshing) return <SubLoad />;
 
   return (
     <View style={styles.container}>
@@ -86,13 +87,22 @@ export default function Sub() {
             </View>
 
             <View style={styles.headerRight}>
+
+              <TouchableOpacity
+                    onPress={() => router.push("/groceries")} 
+                    style={styles.headerAction}>
+                    <Ionicons name="flash-outline" size={24} color="#FFF" />
+              </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.addButton}
                 onPress={() => router.push("/")}
               >
-                <Ionicons name="swap-horizontal" size={20} color="#FFF" />
-                <Text style={styles.addButtonText}>Transactions</Text>
+                <Ionicons name="swap-horizontal" size={25} color="#FFF" />
               </TouchableOpacity>
+
+                <SignOutButton />
+
             </View>
           </View>
         </View>
@@ -105,18 +115,18 @@ export default function Sub() {
         <View style={styles.actionsRow}>
               <TouchableOpacity
                 style={styles.insertButton}
-                onPress={() => router.push("/insert")}
-              >
-                <Ionicons name="add-circle" size={20} color="#FFF" />
-                <Text style={styles.addButtonText}>Subscription</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.insertButton}
                 onPress={() => router.push("/calendar")}
               >
                 <Ionicons name="calendar-outline" size={20} color="#FFF" />
                 <Text style={styles.addButtonText}>Calendar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.insertButton}
+                onPress={() => router.push("/insert")}
+              >
+                <Ionicons name="add-circle" size={20} color="#FFF" />
+                <Text style={styles.addButtonText}>Subscription</Text>
               </TouchableOpacity>
         </View>
 

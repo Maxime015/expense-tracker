@@ -346,10 +346,10 @@ totalStatAmount: {
 },
 
 insertButton: {
-  backgroundColor: COLORS.text,
+  backgroundColor: COLORS.primary,
   paddingHorizontal: 16,
   paddingVertical: 10,
-  borderRadius: 24,
+  borderRadius: 15,
   flexDirection: "row",
   alignItems: "center",
   alignSelf: "flex-start", // ⬅️ empêche de prendre toute la largeur
@@ -383,10 +383,6 @@ Button: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 12,
-  },
-    backButton: {
-    padding: 10,
-    marginRight: 10,
   },
   activeTab: {
     backgroundColor: COLORS.primary,
@@ -473,5 +469,13 @@ Bar: {
   bottom: 40,
 },
 
-
+    headerAction: {
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'coral',
+    marginBottom: 4,
+  },
 });

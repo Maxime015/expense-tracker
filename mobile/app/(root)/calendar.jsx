@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 import { useSubscriptions } from "../../hooks/useSubscriptions";
 import { useUser } from "@clerk/clerk-expo";
+import FeatherIcon from 'react-native-vector-icons/Feather'
 
 const recurrenceLabels = {
   monthly: 'Monthly',
@@ -106,12 +107,16 @@ const CalendarScreen = () => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <View style={styles.container}>
         <View style={styles.appHeader}>
-          <TouchableOpacity 
-            onPress={() => router.back()} 
-            style={styles.backButton}
-          >
-            <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
-          </TouchableOpacity>
+          
+        <TouchableOpacity
+          onPress={() => router.back()} 
+          style={styles.headerAction}>
+          <FeatherIcon
+            color="#F82E08"
+            name="arrow-left"
+            size={24} />
+        </TouchableOpacity>
+
           <Text style={styles.appTitle}>Calendar</Text>
           <View style={{ width: 24 }} />
         </View>
@@ -249,12 +254,23 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     paddingHorizontal: 16,
   },
+   headerAction: {
+    width: 40,
+    height: 40,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffdada',
+    marginBottom: 4,
+  },
   appHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 16,
-    marginBottom: -10,
+    marginBottom: -15,
+    position: 'relative',
+    bottom: 10,
   },
   backButton: {
     padding: 8,
@@ -272,6 +288,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.card,
     padding: 12,
     borderRadius: 12,
+    position: 'relative',
+    bottom: 10,
   },
   monthNavButton: {
     padding: 8,
@@ -286,6 +304,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
     paddingHorizontal: 4,
+    position: 'relative',
+    bottom: 10,
   },
   weekDayText: {
     width: '14%',
@@ -298,6 +318,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: -80,
+    position: 'relative',
+    bottom: 10,
   },
   dayCell: {
     width: '14%',

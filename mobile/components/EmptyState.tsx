@@ -9,9 +9,9 @@ const EmptyState = () => {
     <View style={styles.emptyContainer}>
       <View style={styles.emptyIconContainer}>
         <Ionicons 
-          name="cart-outline" 
+          name="flash-outline" 
           size={60} 
-          color={COLORS.textLight} 
+          color="coral"
           testID="empty-cart-icon"
         />
       </View>

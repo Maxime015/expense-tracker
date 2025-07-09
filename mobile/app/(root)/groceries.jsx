@@ -2,12 +2,12 @@ import { styles } from "@/assets/styles/groceries.styles";
 import { COLORS } from "../../constants/colors";
 import EmptyState from "@/components/EmptyState";
 import Header from "@/components/Header";
-//import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoInput from "@/components/TodoInput";
 import { useGroceries } from "@/hooks/useGroceries";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { Alert, FlatList, StatusBar, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useState, useEffect } from "react";
+import { Alert, FlatList, StatusBar, Text, TextInput, TouchableOpacity, View, RefreshControl, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "@clerk/clerk-expo";
 
@@ -15,22 +15,33 @@ export default function GroceriesScreen() {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const { user } = useUser();
+  const [refreshing, setRefreshing] = useState(false);
 
   // Utilisation du hook useGroceries
  const {
   groceries,
   groceriesSummary,
   isLoading,
-  error,
   loadData,
   addGrocerie,
   updateGrocerie,
   toggleGrocerie,
   deleteGrocerie, // Assurez-vous que c'est bien écrit (et non deleteGrocerie)
-  clearAllGroceries,
 } = useGroceries(user?.id);
 
-  // if (isLoading) return <LoadingSpinner />;
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+
+  if (isLoading && !refreshing) return <LoadingSpinner />;
 
   const handleToggleGrocerie = async (id) => {
     try {
@@ -141,37 +152,41 @@ export default function GroceriesScreen() {
               </View>
             </View>
           ) : (
-            <View style={styles.todoTextContainer}>
-              <Text
-                style={[
-                  styles.todoText,
-                  item.is_completed && {
-                    textDecorationLine: "line-through",
-                    color: COLORS.textLight,
-                    opacity: 0.6,
-                  },
-                ]}
-              >
-                {item.text}
-              </Text>
+            // Dans la fonction renderGrocerieItem, modifiez la partie todoTextContainer
+              <View style={styles.todoTextContainer}>
+                <View style={styles.todoTextWrapper}>
+                  <Text
+                    style={[
+                      styles.todoText,
+                      item.is_completed && {
+                        textDecorationLine: "line-through",
+                        color: COLORS.textLight,
+                        opacity: 0.6,
+                      },
+                    ]}
+                  >
+                    {item.text}
+                  </Text>
+                </View>
 
-              <View style={styles.todoActions}>
-                <TouchableOpacity 
-                  onPress={() => handleEditGrocerie(item)} 
-                  activeOpacity={0.8}
-                  style={[styles.actionButton, { backgroundColor: COLORS.count }]}
-                >
-                  <Ionicons name="pencil" size={14} color="#fff" />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  onPress={() => handleDeleteGrocerie(item.id)} // Utilisez item.id plutôt que item._id
-                  activeOpacity={0.8}
-                  style={[styles.actionButton, { backgroundColor: COLORS.expense }]}
-                >
-                  <Ionicons name="trash" size={14} color="#fff" />
-                </TouchableOpacity>
+                <View style={styles.todoActions}>
+                  <TouchableOpacity 
+                    onPress={() => handleEditGrocerie(item)} 
+                    activeOpacity={0.8}
+                    style={[styles.actionButton, { backgroundColor: COLORS.count }]}
+                  >
+                    <Ionicons name="pencil" size={14} color="#fff" />
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    onPress={() => handleDeleteGrocerie(item.id)}
+                    activeOpacity={0.8}
+                    style={[styles.actionButton, { backgroundColor: COLORS.expense }]}
+                  >
+                    <Ionicons name="trash" size={14} color="#fff" />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
           )}
         </View>
       </View>
@@ -179,28 +194,35 @@ export default function GroceriesScreen() {
   };
 
   return (
-  <View style={styles.container}>
-    <StatusBar barStyle="dark-content" />
     <SafeAreaView style={styles.safeArea}>
-      <Header groceriesSummary={groceriesSummary} />
-      
-      <View style={{ flex: 1 }}>
-        <FlatList
-          data={groceries}
-          renderItem={renderGrocerieItem}
-          keyExtractor={(item) => item.id.toString()} // Utilisez uniquement item.id
-          style={styles.todoList}
-          contentContainerStyle={[
-            styles.todoListContent,
-            groceries.length === 0 && { flexGrow: 1 }
-          ]}
-          ListEmptyComponent={<EmptyState />}
-        />
-      </View>
+      <StatusBar barStyle="dark-content" />
+      <View style={styles.container}>
+        <Header groceriesSummary={groceriesSummary} />
+        
+        <View style={styles.contentContainer}>
+          <FlatList
+            data={groceries}
+            renderItem={renderGrocerieItem}
+            keyExtractor={(item) => item.id.toString()}
+            style={styles.todoList}
+            contentContainerStyle={[
+              styles.todoListContent,
+              groceries.length === 0 && { flexGrow: 1 }
+            ]}
+            ListEmptyComponent={<EmptyState />}
+            refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={[COLORS.primary]} // Correction ici
+                        tintColor={COLORS.primary} // Correction ici
+                      />
+                    }
+          />
+        </View>
 
-      {/* Pas besoin de KeyboardAvoidingView ici, il est déjà dans TodoInput */}
-      <TodoInput onAddTodo={addGrocerie} />
+        <TodoInput onAddTodo={addGrocerie} />
+      </View>
     </SafeAreaView>
-  </View>
-);
+  );
 }
