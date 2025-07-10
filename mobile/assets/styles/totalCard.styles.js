@@ -8,12 +8,14 @@ totalCard: {
   backgroundColor: COLORS.card,
   borderRadius: 20,
   padding: 20,
-  marginBottom: 20,
+  marginBottom: 3,
   shadowColor: COLORS.shadow,
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1,
   shadowRadius: 3,
   elevation: 3,
+  position: "relative",
+  bottom: 15,
 },
 
 totalStats: {

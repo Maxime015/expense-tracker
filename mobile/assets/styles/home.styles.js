@@ -15,9 +15,11 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: -10,
+    marginBottom: 0,
     paddingHorizontal: 0,
     paddingVertical: 12,
+    position: "relative",
+    bottom: 15,
   },
 
   headero: {
@@ -62,7 +64,7 @@ export const styles = StyleSheet.create({
   headerRight: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 6,
   },
   headerTitle: {
     fontSize: 28,
@@ -101,7 +103,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.card,
     borderRadius: 20,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 10,
     shadowColor: COLORS.shadow,
     shadowOffset: {
       width: 0,
@@ -110,6 +112,8 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+    position: "relative",
+    bottom: 15,
   },
   balanceTitle: {
     fontSize: 16,
@@ -378,6 +382,7 @@ Button: {
   shadowRadius: 4,
   elevation: 3,
 },
+
 // Nouveaux styles ajoutés
   actionsRow: {
     flexDirection: 'row',

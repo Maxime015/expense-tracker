@@ -1,10 +1,11 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { COLORS } from "@/constants/colors.js";
+import { useThemeStore } from "@/store/themeStore"; // ✅ thème dynamique
 
 const SafeScreen = ({ children }) => {
   const insets = useSafeAreaInsets();
+  const COLORS = useThemeStore().getCurrentTheme(); // ✅ récupération du thème
 
   return (
     <View
@@ -12,7 +13,7 @@ const SafeScreen = ({ children }) => {
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
         flex: 1,
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.background, // ✅ fond dynamique
       }}
     >
       {children}

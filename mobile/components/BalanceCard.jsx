@@ -10,6 +10,7 @@ const BalanceCard = ({ summary }) => {
   return (
     <View style={styles.balanceCard}>
       <Text style={styles.balanceTitle}>Total Balance</Text>
+      
       <TouchableOpacity
         style={styles.Button}
         onPress={() => router.push("/groceries")}
@@ -17,9 +18,11 @@ const BalanceCard = ({ summary }) => {
         <Ionicons name="flash-outline" size={20} color="#FFF" />
         <Text style={styles.addButtonText}>Groceries</Text>
       </TouchableOpacity>
+
       <Text style={styles.balanceAmount}>
         ${parseFloat(summary.balance).toFixed(2)}
       </Text>
+
       <View style={styles.balanceStats}>
         <View style={styles.balanceStatItem}>
           <Text style={styles.balanceStatLabel}>Income</Text>

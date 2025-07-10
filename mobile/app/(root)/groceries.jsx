@@ -1,5 +1,6 @@
 import { styles } from "@/assets/styles/groceries.styles";
-import { COLORS } from "../../constants/colors";
+import { useThemeStore } from "@/store/themeStore";
+
 import EmptyState from "@/components/EmptyState";
 import Header from "@/components/Header";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -7,28 +8,37 @@ import TodoInput from "@/components/TodoInput";
 import { useGroceries } from "@/hooks/useGroceries";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { Alert, FlatList, StatusBar, Text, TextInput, TouchableOpacity, View, RefreshControl, } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  RefreshControl,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "@clerk/clerk-expo";
 
 export default function GroceriesScreen() {
+  const COLORS = useThemeStore().getCurrentTheme(); // 🎯 Dark mode dynamique
+
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const { user } = useUser();
   const [refreshing, setRefreshing] = useState(false);
 
-  // Utilisation du hook useGroceries
- const {
-  groceries,
-  groceriesSummary,
-  isLoading,
-  loadData,
-  addGrocerie,
-  updateGrocerie,
-  toggleGrocerie,
-  deleteGrocerie, // Assurez-vous que c'est bien écrit (et non deleteGrocerie)
-} = useGroceries(user?.id);
-
+  const {
+    groceries,
+    groceriesSummary,
+    isLoading,
+    loadData,
+    addGrocerie,
+    updateGrocerie,
+    toggleGrocerie,
+    deleteGrocerie,
+  } = useGroceries(user?.id);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -40,7 +50,6 @@ export default function GroceriesScreen() {
     loadData();
   }, [loadData]);
 
-
   if (isLoading && !refreshing) return <LoadingSpinner />;
 
   const handleToggleGrocerie = async (id) => {
@@ -51,31 +60,28 @@ export default function GroceriesScreen() {
     }
   };
 
+  const handleDeleteGrocerie = async (id) => {
+    if (!id) {
+      console.error("ID is undefined - cannot delete");
+      return;
+    }
 
- const handleDeleteGrocerie = async (id) => {
-  if (!id) {
-    console.error("ID is undefined - cannot delete");
-    return;
-  }
-  
-  Alert.alert("Supprimer", "Voulez-vous vraiment supprimer cet article ?", [
-    { text: "Annuler", style: "cancel" },
-    { 
-      text: "Supprimer", 
-      style: "destructive", 
-      onPress: async () => {
-        try {
-          console.log("Attempting to delete grocery with ID:", id); // Debug log
-          await deleteGrocerie(id);
-        } catch (error) {
-          console.log("Erreur suppression", error);
-          Alert.alert("Erreur", error.message || "Échec de la suppression");
-        }
-      } 
-    },
-  ]);
-};
-
+    Alert.alert("Supprimer", "Voulez-vous vraiment supprimer cet article ?", [
+      { text: "Annuler", style: "cancel" },
+      {
+        text: "Supprimer",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteGrocerie(id);
+          } catch (error) {
+            console.log("Erreur suppression", error);
+            Alert.alert("Erreur", error.message || "Échec de la suppression");
+          }
+        },
+      },
+    ]);
+  };
 
   const handleEditGrocerie = (grocerie) => {
     setEditText(grocerie.text);
@@ -113,10 +119,15 @@ export default function GroceriesScreen() {
             <View
               style={[
                 styles.checkboxInner,
-                item.is_completed && { backgroundColor: COLORS.success || COLORS.income, borderColor: "transparent" },
+                item.is_completed && {
+                  backgroundColor: COLORS.success || COLORS.income,
+                  borderColor: "transparent",
+                },
               ]}
             >
-              {item.is_completed && <Ionicons name="checkmark" size={18} color="#fff" />}
+              {item.is_completed && (
+                <Ionicons name="checkmark" size={18} color="#fff" />
+              )}
             </View>
           </TouchableOpacity>
 
@@ -132,61 +143,74 @@ export default function GroceriesScreen() {
                 placeholderTextColor={COLORS.textLight}
               />
               <View style={styles.editButtons}>
-                <TouchableOpacity 
-                  onPress={handleSaveEdit} 
+                <TouchableOpacity
+                  onPress={handleSaveEdit}
                   activeOpacity={0.8}
-                  style={[styles.editButton, { backgroundColor: COLORS.success || COLORS.income }]}
+                  style={[
+                    styles.editButton,
+                    { backgroundColor: COLORS.success || COLORS.income },
+                  ]}
                 >
                   <Ionicons name="checkmark" size={16} color="#fff" />
                   <Text style={styles.editButtonText}>Save</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
-                  onPress={handleCancelEdit} 
+                <TouchableOpacity
+                  onPress={handleCancelEdit}
                   activeOpacity={0.8}
-                  style={[styles.editButton, { backgroundColor: COLORS.border }]}
+                  style={[
+                    styles.editButton,
+                    { backgroundColor: COLORS.border },
+                  ]}
                 >
                   <Ionicons name="close" size={16} color={COLORS.text} />
-                  <Text style={[styles.editButtonText, { color: COLORS.text }]}>Cancel</Text>
+                  <Text style={[styles.editButtonText, { color: COLORS.text }]}>
+                    Cancel
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           ) : (
-            // Dans la fonction renderGrocerieItem, modifiez la partie todoTextContainer
-              <View style={styles.todoTextContainer}>
-                <View style={styles.todoTextWrapper}>
-                  <Text
-                    style={[
-                      styles.todoText,
-                      item.is_completed && {
-                        textDecorationLine: "line-through",
-                        color: COLORS.textLight,
-                        opacity: 0.6,
-                      },
-                    ]}
-                  >
-                    {item.text}
-                  </Text>
-                </View>
-
-                <View style={styles.todoActions}>
-                  <TouchableOpacity 
-                    onPress={() => handleEditGrocerie(item)} 
-                    activeOpacity={0.8}
-                    style={[styles.actionButton, { backgroundColor: COLORS.count }]}
-                  >
-                    <Ionicons name="pencil" size={14} color="#fff" />
-                  </TouchableOpacity>
-                  
-                  <TouchableOpacity 
-                    onPress={() => handleDeleteGrocerie(item.id)}
-                    activeOpacity={0.8}
-                    style={[styles.actionButton, { backgroundColor: COLORS.expense }]}
-                  >
-                    <Ionicons name="trash" size={14} color="#fff" />
-                  </TouchableOpacity>
-                </View>
+            <View style={styles.todoTextContainer}>
+              <View style={styles.todoTextWrapper}>
+                <Text
+                  style={[
+                    styles.todoText,
+                    item.is_completed && {
+                      textDecorationLine: "line-through",
+                      color: COLORS.textLight,
+                      opacity: 0.6,
+                    },
+                  ]}
+                >
+                  {item.text}
+                </Text>
               </View>
+
+              <View style={styles.todoActions}>
+                <TouchableOpacity
+                  onPress={() => handleEditGrocerie(item)}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.actionButton,
+                    { backgroundColor: COLORS.count },
+                  ]}
+                >
+                  <Ionicons name="pencil" size={14} color="#fff" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => handleDeleteGrocerie(item.id)}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.actionButton,
+                    { backgroundColor: COLORS.expense },
+                  ]}
+                >
+                  <Ionicons name="trash" size={14} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </View>
           )}
         </View>
       </View>
@@ -194,11 +218,15 @@ export default function GroceriesScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: COLORS.background }]}>
+      <StatusBar
+        barStyle={
+          COLORS.background === "#0A0F1C" ? "light-content" : "dark-content"
+        }
+      />
+      <View style={[styles.container, { backgroundColor: COLORS.background }]}>
         <Header groceriesSummary={groceriesSummary} />
-        
+
         <View style={styles.contentContainer}>
           <FlatList
             data={groceries}
@@ -207,17 +235,17 @@ export default function GroceriesScreen() {
             style={styles.todoList}
             contentContainerStyle={[
               styles.todoListContent,
-              groceries.length === 0 && { flexGrow: 1 }
+              groceries.length === 0 && { flexGrow: 1 },
             ]}
             ListEmptyComponent={<EmptyState />}
             refreshControl={
-                      <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                        colors={[COLORS.primary]} // Correction ici
-                        tintColor={COLORS.primary} // Correction ici
-                      />
-                    }
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[COLORS.primary]}
+                tintColor={COLORS.primary}
+              />
+            }
           />
         </View>
 

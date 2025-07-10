@@ -12,100 +12,32 @@ import { useUser } from "@clerk/clerk-expo";
 import { API_URL } from "../../constants/api";
 import { styles } from "../../assets/styles/create.styles.js";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../../constants/colors.js";
+import { useThemeStore } from "../../store/themeStore"; // ✅ thème dynamique
 
 const CATEGORIES = [
-  {
-    id: "food",
-    name: "Foods & Drinks",
-    icon: "fast-food",
-  },
-  {
-    id: "shopping",
-    name: "Shopping",
-    icon: "cart",
-  },
-  {
-    id: "transportation",
-    name: "Transportation",
-    icon: "car",
-  },
-  {
-    id: "entertainment",
-    name: "Entertainment",
-    icon: "film",
-  },
-  {
-    id: "bills",
-    name: "Bills",
-    icon: "receipt",
-  },
-  {
-    id: "income",
-    name: "Income",
-    icon: "cash",
-  },
-  {
-    id: "health",
-    name: "Health",
-    icon: "medkit",
-  },
-  {
-    id: "education",
-    name: "Education",
-    icon: "school",
-  },
-  {
-    id: "travel",
-    name: "Travel",
-    icon: "airplane",
-  },
-  {
-    id: "gifts",
-    name: "Gifts & Donations",
-    icon: "gift",
-  },
-  {
-    id: "subscriptions",
-    name: "Subscriptions",
-    icon: "albums",
-  },
-  {
-    id: "home",
-    name: "Home & Rent",
-    icon: "home",
-  },
-  {
-    id: "saving",
-    name: "Savings",
-    icon: "wallet",
-  },
-  {
-    id: "investment",
-    name: "Investments",
-    icon: "trending-up",
-  },
-  {
-    id: "tax",
-    name: "Taxes",
-    icon: "document-text",
-  },
-  {
-    id: "pets",
-    name: "Pets",
-    icon: "paw",
-  },
-  {
-    id: "other",
-    name: "Other",
-    icon: "ellipsis-horizontal",
-  },
+  { id: "food", name: "Foods & Drinks", icon: "fast-food" },
+  { id: "shopping", name: "Shopping", icon: "cart" },
+  { id: "transportation", name: "Transportation", icon: "car" },
+  { id: "entertainment", name: "Entertainment", icon: "film" },
+  { id: "bills", name: "Bills", icon: "receipt" },
+  { id: "income", name: "Income", icon: "cash" },
+  { id: "health", name: "Health", icon: "medkit" },
+  { id: "education", name: "Education", icon: "school" },
+  { id: "travel", name: "Travel", icon: "airplane" },
+  { id: "gifts", name: "Gifts & Donations", icon: "gift" },
+  { id: "subscriptions", name: "Subscriptions", icon: "albums" },
+  { id: "home", name: "Home & Rent", icon: "home" },
+  { id: "saving", name: "Savings", icon: "wallet" },
+  { id: "investment", name: "Investments", icon: "trending-up" },
+  { id: "tax", name: "Taxes", icon: "document-text" },
+  { id: "pets", name: "Pets", icon: "paw" },
+  { id: "other", name: "Other", icon: "ellipsis-horizontal" },
 ];
-
 
 const CreateScreen = () => {
   const router = useRouter();
   const { user } = useUser();
+  const COLORS = useThemeStore().getCurrentTheme(); // ✅ thème dynamique
 
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -114,28 +46,21 @@ const CreateScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreate = async () => {
-    //check validations
-    if (!title.trim())
-      return Alert.alert("Error", "Please enter a transaction title");
-    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-      Alert.alert("Error", "Please enter a valid amount");
-      return;
-    }
+    if (!title.trim()) return Alert.alert("Error", "Please enter a transaction title");
+    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0)
+      return Alert.alert("Error", "Please enter a valid amount");
     if (!selectedCategory)
       return Alert.alert("Error", "Please select a category");
 
     setIsLoading(true);
     try {
-      //format the amounnt - if expenses + if income
       const formattedAmount = isExpense
         ? -Math.abs(parseFloat(amount))
         : Math.abs(parseFloat(amount));
 
       const response = await fetch(`${API_URL}/transactions`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: user.id,
           title,
@@ -152,7 +77,7 @@ const CreateScreen = () => {
       Alert.alert("Success", "Transaction created successfully");
       router.back();
     } catch (error) {
-      Alert.alert("Error", error.message || "Transaction created successfully");
+      Alert.alert("Error", error.message || "Transaction failed");
       console.log("Error creating transaction:", error);
     } finally {
       setIsLoading(false);
@@ -160,15 +85,12 @@ const CreateScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={COLORS.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>New Transaction</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.text }]}>New Transaction</Text>
         <TouchableOpacity
           style={[
             styles.saveButtonContainer,
@@ -177,60 +99,56 @@ const CreateScreen = () => {
           onPress={handleCreate}
           disabled={isLoading}
         >
-          <Text style={styles.saveButton}>{isLoading ? "Saving" : "Save"}</Text>
+          <Text style={[styles.saveButton, { color: COLORS.primary }]}>
+            {isLoading ? "Saving" : "Save"}
+          </Text>
           {!isLoading && (
             <Ionicons name="checkmark" size={18} color={COLORS.primary} />
           )}
         </TouchableOpacity>
       </View>
 
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: COLORS.card }]}>
+        {/* Expense / Income selector */}
         <View style={styles.typeSelector}>
           <TouchableOpacity
-            style={[styles.typeButton, isExpense && styles.typeButtonActive]}
+            style={[
+              styles.typeButton,
+              isExpense && { backgroundColor: COLORS.expense },
+            ]}
             onPress={() => setIsExpense(true)}
           >
             <Ionicons
               name="arrow-down-circle"
               size={22}
-              color={isExpense ? COLORS.white : COLORS.expense}
+              color={COLORS.white}
               style={styles.typeIcon}
             />
-            <Text
-              style={[
-                styles.typeButtonText,
-                isExpense && styles.typeButtonTextActive,
-              ]}
-            >
-              Expense
-            </Text>
+            <Text style={[styles.typeButtonText, { color: COLORS.white }]}>Expense</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.typeButton, !isExpense && styles.typeButtonActive]}
+            style={[
+              styles.typeButton,
+              !isExpense && { backgroundColor: COLORS.income },
+            ]}
             onPress={() => setIsExpense(false)}
           >
             <Ionicons
-              name="arrow-down-circle"
+              name="arrow-up-circle"
               size={22}
-              color={!isExpense ? COLORS.white : COLORS.income}
+              color={COLORS.white}
               style={styles.typeIcon}
             />
-            <Text
-              style={[
-                styles.typeButtonText,
-                !isExpense && styles.typeButtonTextActive,
-              ]}
-            >
-              Income
-            </Text>
+            <Text style={[styles.typeButtonText, { color: COLORS.white }]}>Income</Text>
           </TouchableOpacity>
         </View>
 
+        {/* Amount */}
         <View style={styles.amountContainer}>
-          <Text style={styles.currencySymbol}>$</Text>
+          <Text style={[styles.currencySymbol, { color: COLORS.text }]}>$</Text>
           <TextInput
-            style={styles.amountInput}
+            style={[styles.amountInput, { color: COLORS.text }]}
             placeholder="0.00"
             placeholderTextColor={COLORS.textLight}
             value={amount}
@@ -239,6 +157,7 @@ const CreateScreen = () => {
           />
         </View>
 
+        {/* Title */}
         <View style={styles.inputContainer}>
           <Ionicons
             name="create-outline"
@@ -247,7 +166,7 @@ const CreateScreen = () => {
             style={styles.inputIcon}
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: COLORS.text }]}
             placeholder="Transaction Title"
             placeholderTextColor={COLORS.textLight}
             value={title}
@@ -255,42 +174,41 @@ const CreateScreen = () => {
           />
         </View>
 
-        <Text style={styles.sectionTitle}>
-          <Ionicons name="pricetag-outline" size={16} color={COLORS.text} />
-          Category
+        {/* Category */}
+        <Text style={[styles.sectionTitle, { color: COLORS.text }]}>
+          <Ionicons name="pricetag-outline" size={16} color={COLORS.text} /> Category
         </Text>
         <View style={styles.categoryGrid}>
-          {CATEGORIES.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              style={[
-                styles.categoryButton,
-                selectedCategory === category.name &&
-                  styles.categoryButtonActive,
-              ]}
-              onPress={() => setSelectedCategory(category.name)}
-            >
-              <Ionicons
-                name={category.icon}
-                size={20}
-                color={
-                  selectedCategory === category.name
-                    ? COLORS.white
-                    : COLORS.text
-                }
-                style={styles.categoryIcon}
-              />
-              <Text
+          {CATEGORIES.map((category) => {
+            const isSelected = selectedCategory === category.name;
+            return (
+              <TouchableOpacity
+                key={category.id}
                 style={[
-                  styles.categoryButtonText,
-                  selectedCategory === category.name &&
-                    styles.categoryButtonTextActive,
+                  styles.categoryButton,
+                  isSelected && {
+                    backgroundColor: COLORS.primary,
+                  },
                 ]}
+                onPress={() => setSelectedCategory(category.name)}
               >
-                {category.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Ionicons
+                  name={category.icon}
+                  size={20}
+                  color={isSelected ? COLORS.white : COLORS.text}
+                  style={styles.categoryIcon}
+                />
+                <Text
+                  style={[
+                    styles.categoryButtonText,
+                    { color: isSelected ? COLORS.white : COLORS.text },
+                  ]}
+                >
+                  {category.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
 

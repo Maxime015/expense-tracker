@@ -77,21 +77,25 @@ const sunsetTheme = {
   count: "#FF9800",
 };
 
-// 🌌 Midnight Theme
+
+// 🌌 Midnight Theme (froid et sombre)
 const midnightTheme = {
-  primary: "#1A237E",
-  background: "#ECEFF1",
-  text: "#0D47A1",
-  border: "#B0BEC5",
-  white: "#FFFFFF",
-  textLight: "#7986CB",
-  expense: "#C62828",
-  income: "#2E7D32",
-  card: "#FFFFFF",
+  primary: "#0D47A1",         // Bleu profond
+  background: "#1A2238",      // Très sombre
+  text: "#CFD8DC",            // Gris clair bleuté
+  border: "#37474F",          // Gris froid foncé
+  white: "#FFFFFF",           // Blanc froid
+  textLight: "#90A4AE",       // Gris bleu clair
+  expense: "#EF5350",         // Rouge désaturé
+  income: "#26A69A",          // Vert froid
+  card: "#121E2A",            // Carte sombre
   shadow: "#000000",
-  amount: "#3949AB",
-  count: "#FFA726",
+  amount: "#4DD0E1",          // Bleu-vert
+  count: "#80DEEA",           // Bleu clair froid
+  success: "#26A69A",         // Ajout pour cohérence
+  danger: "#EF5350"           // Ajout pour cohérence
 };
+
 
 // 🍑 Peach Theme
 const peachTheme = {

@@ -3,10 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
 import GroceriesCard from "./GroceriesCard";
-import { COLORS } from "../constants/colors";
+import { useThemeStore } from "@/store/themeStore"; // ✅ Thème dynamique
 import { useGroceries } from "../hooks/useGroceries";
 import { useEffect } from "react";
-import FeatherIcon from 'react-native-vector-icons/Feather'
+import FeatherIcon from "react-native-vector-icons/Feather";
+import { COLORS } from "../constants/colors";
 
 interface HeaderProps {
   groceriesSummary: {
@@ -16,6 +17,8 @@ interface HeaderProps {
 }
 
 const Header = ({ groceriesSummary }: HeaderProps) => {
+  const COLORS = useThemeStore().getCurrentTheme(); // ✅ Récupère le thème actuel
+
   const { total, completed } = groceriesSummary;
   const progressPercentage = total > 0 ? (completed / total) * 100 : 0;
   const router = useRouter();
@@ -51,7 +54,7 @@ useEffect(() => {
             accessibilityLabel="User avatar"
           />
           <View style={localStyles.greeting}>
-            <Text style={localStyles.welcomeText}>Welcome,</Text>
+            <Text style={localStyles.welcomeText}>Welcome, 🎯</Text>
             <Text style={localStyles.username} numberOfLines={1} ellipsizeMode="tail">
               {emailPrefix}
             </Text>
@@ -83,7 +86,7 @@ useEffect(() => {
 
       {/* Groceries progress section */}
       <View style={localStyles.groceriesSection}>
-        <Text style={localStyles.title}>Today's Groceries 👀</Text>
+        <Text style={[localStyles.loadingText, { color: COLORS.text }]}>Today's Groceries 👀</Text>
         <Text style={localStyles.subtitle}>
           {completed} of {total} completed
         </Text>
@@ -201,10 +204,10 @@ const localStyles = StyleSheet.create({
     position: "relative",
     bottom: 60,
   },
-  title: {
-    fontSize: 20,
+  
+  loadingText: {
+   fontSize: 20,
     fontWeight: "600",
-    color: COLORS.text,
     marginBottom: 4,
   },
   subtitle: {
